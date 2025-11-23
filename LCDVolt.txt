@@ -1,0 +1,41 @@
+/*LCD : Voltmeter 
+Goal : Use the Arduino to measure voltage and display the value in volts on the LCD screen.
+Main Theme : Analog Input displayed on screen.
+*/
+
+
+#include <LiquidCrystal.h>//includes the LCD library
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;//sets the pins
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+
+
+
+
+int sensorPin = A0;   // select the input pin for the potentiometer   
+int sensorValue = 0;  // variable to store the value coming from the sensor
+
+
+
+
+
+void setup() {
+  lcd.begin(16, 1);//establish connection with lcd screen
+ 
+pinMode(sensorPin,INPUT); // declare the ledPin as an OUTPUT:
+}
+void loop() {
+ sensorValue = analogRead(sensorPin);
+ //calculations for voltage : 
+ float voltage = sensorValue * (5.0 / 1023.0);
+ 
+ 
+  lcd.print("voltage = ");//prints voltage
+  lcd.println(voltage);
+ 
+  delay(100);//delay for smoothness
+  lcd.blink();
+  delay(100);
+
+
+}

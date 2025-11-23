@@ -1,0 +1,69 @@
+/*LCD : Ohmmeter 
+Goal : Measure the resistance of unknown resistor using the Arduino and display the value in
+ohms on LCD screen.
+Main Theme : Analog Input displayed on screen.
+*/
+
+#include <LiquidCrystal.h>//includes the LCD library
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+
+
+
+
+int sensorPin = A0;   // select the input pin for the potentiometer     
+int sensorValue = 0;  // variable to store the value coming from the sensor
+
+ #include <LiquidCrystal.h>
+//Custom Ohm symbol :    
+byte ohmSymbol[8] = {
+  B01110,  //  ### 
+  B10001,  // #   #
+  B10001,  // #   #
+  B10001,  // #   #
+  B01010,  //  # # 
+  B01010,  //  # # 
+  B11011,  // ## ##
+  B00000   //     
+};
+
+
+void setup() {
+  lcd.begin(16, 2);//establish connection with lcd screen
+ //Creates Ohm symbol :
+  lcd.createChar(0, ohmSymbol);
+ 
+  // declare the ledPin as an OUTPUT:
+  Serial.begin(9600);
+pinMode(sensorPin,INPUT);
+}
+void loop() {
+ sensorValue = analogRead(sensorPin);
+ //calculations for unknown resistor : 
+float voltage = sensorValue * (5.0 / 1023.0);
+float I = (5.0 - voltage)/(9960.0);
+float R = (voltage)/(I);
+
+
+
+
+Serial.print("R= ");
+Serial.print(R);
+Serial.println("Ω");
+
+lcd.clear();
+lcd.setCursor(0, 0);
+lcd.print("R = ");
+lcd.print(R);
+lcd.write(byte(0));
+
+
+
+
+  delay(100);//delay for smoothness
+  lcd.blink();
+  delay(100);
+
+
+}
