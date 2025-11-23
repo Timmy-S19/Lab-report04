@@ -1,0 +1,28 @@
+/*Servo : LDR
+Goal : Using a LDR to control a servo.
+Main Theme : Using Analog Input to control a servo.
+*/
+
+#include <Servo.h>
+
+Servo myservo;  // create Servo object to control a servo
+
+int ldrPin = A0;  // analog pin used to connect the LDR
+int val;    // variable to read the value from the analog pin
+int deg; 
+void setup() {
+  myservo.attach(9);  // attaches the servo on pin 9 to the Servo object
+Serial.begin(9600);
+pinMode(ldrPin,INPUT);
+}
+
+void loop() {
+  
+  val = analogRead(ldrPin);            // reads the value of the LDR (value between 560 and 10.4kOhms)
+  deg = map(val, 560, 10400, 0, 180);     // scale it for use with the servo (value between 0 and 180)
+  myservo.write(deg);                  // sets the servo position according to the scaled value
+  delay(15); 
+  Serial.println(val);
+   
+                        // waits for the servo to get there
+}

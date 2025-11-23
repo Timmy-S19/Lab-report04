@@ -1,0 +1,25 @@
+/*Servo : Joystick
+Goal : Using a joystick to control a servo.
+Main Theme : Using Analog Input to control a servo.
+*/
+
+#include <Servo.h>//Include servo Library
+
+Servo myservo;  // create Servo object to control a servo
+
+int joyX = A0;  // analog pin used to connect the joystick
+int xVal;    // variable to read the value from the analog pin
+int deg; 
+void setup() {
+myservo.attach(9);  // attaches the servo on pin 9 to the Servo object
+pinMode(joyX,INPUT);//puts pin A0 as a input.
+}
+
+void loop() {
+  
+  val = analogRead(xVal);            // reads the value of the joystick (value between 0 and 1023)
+  deg = map(val, 0, 1023, 0, 180);     // scale it for use with the servo (value between 0 and 180)
+  myservo.write(deg);                  // sets the servo position according to the scaled value
+  delay(15); 
+   
+}
