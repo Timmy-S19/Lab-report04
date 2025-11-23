@@ -1,0 +1,50 @@
+/*DHT11 : 
+Goal : Display the temperature and Humidity Values on the LCD.
+Main theme : Controlling a sensor and displaying results on LCD screen.
+*/
+
+
+#include <LiquidCrystal.h>//include LCD and DHT libraries
+#include "DHT.h";
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+//DHT-11
+#define DHTPIN 8
+#define DHTTYPE DHT11
+
+//Define Variables
+float hum;
+float temp;
+
+//Setup DHT sensor for normal 15mhz arduino
+DHT dht(DHTPIN,DHTTYPE);
+
+
+
+void setup() {
+//establish connection to LCD screen and DHT sensor
+lcd.begin(16,2);
+
+dht.begin();
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+delay(200);
+hum= dht.readHumidity();//gives the values to a name
+temp= dht.readTemperature();
+
+lcd.clear();
+//print values
+lcd.setCursor(0,0);
+lcd.print("Temp = ");
+lcd.print(temp);
+lcd.print(" C");
+lcd.setCursor(0,1);
+lcd.print("Humid = ");
+lcd.print(hum);
+lcd.print(" %");
+
+}
