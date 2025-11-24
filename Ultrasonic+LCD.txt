@@ -1,0 +1,47 @@
+/*Ultrasonic Sensor : 
+Goal : Display the Distance Value on the LCD.
+Main theme : Reading sensor value and displaying it on a LCD screen.
+*/
+
+
+#include <LiquidCrystal.h>//include LCD library
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+#define trigPin 10
+#define echoPin 13
+
+float duration, distance;//create variable
+
+void setup() {
+  // put your setup code here, to run once:
+Serial.begin(9600);//establish connection with LCD screen and Serial Moniter
+lcd.begin(16,2);
+pinMode(trigPin,OUTPUT);//Set pin as output and inputs
+pinMode(echoPin, INPUT);
+}
+
+void loop() {
+//Start detecting distance with pulses 
+lcd.setCursor(0,0);
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+//calculations for distance : 
+duration = pulseIn(echoPin, HIGH);
+distance = (duration/2) * 0.0343;
+
+lcd.print("Distance = ");
+if (distance >= 400 || distance <=2) { //if in the 2cm blind spot or outside of 400cm range print out of range.
+  lcd.println("Out of range");
+}
+else {
+  lcd.print(distance);//prints the distance.
+  lcd.println(" cm");
+  delay(500);
+}
+delay(500);
+
+}
