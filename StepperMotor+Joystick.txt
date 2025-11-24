@@ -1,0 +1,56 @@
+/*Stepper Motor : Joystick - speed/direction
+Goal : Using a joystick to control a stepper motor.
+Main Theme : Using Analog Input to control a stepper motor.
+*/
+
+#include <Stepper.h>//Include stepper motor library
+
+const int STEPS_PER_REV = 32;
+const int GEAR_RATIO = 64;
+const int TOTAL_STEPS = STEPS_PER_REV * GEAR_RATIO;//Shaft Steps
+//sets pins
+Stepper motor(STEPS_PER_REV, 8, 10, 9, 11);
+
+const int joyX = A1;  // Direction Axis
+const int joyY = A0;  // Speed Axis
+
+unsigned long previousMillis = 0;//Starts the time at 0ms
+const int stepInterval = 10;  // interval between sets is at 10ms
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  unsigned long currentMillis = millis();//gets current time
+
+  int xVal = analogRead(joyX);//reads value
+  int yVal = analogRead(joyY);
+
+ 
+  int direction = 0;
+  if (xVal < 450) direction = -1;     //If under 450 go CCW
+  else if (xVal > 450) direction = 1; //If over 450 go CW
+
+
+  // --- Speed mapping ---
+  int speed = map(yVal, 0, 1023, 600, 0); // 0 = full speed
+
+//Using the delay problem knowledge to avoid using delay : 
+  if (currentMillis - previousMillis >= stepInterval) {
+    previousMillis = currentMillis;
+
+    if (direction != 0) {
+      motor.setSpeed(speed);
+      motor.step(direction);  // Move 1 step per interval
+    }
+  }
+
+  Serial.print("X: "); Serial.print(xVal);
+  Serial.print(" | Y: "); Serial.print(yVal);
+  Serial.print(" | Speed: "); Serial.print(speed);
+  Serial.print(" | Direction: ");
+  if (direction == 1) Serial.println("CW");
+  else if (direction == -1) Serial.println("CCW");
+  else Serial.println("STOP");
+}
